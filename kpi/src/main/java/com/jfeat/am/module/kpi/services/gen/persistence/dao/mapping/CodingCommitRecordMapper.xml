@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.kpi.services.gen.persistence.dao.CodingCommitRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jfeat.am.module.kpi.services.gen.persistence.model.CodingCommitRecord">
+        <id column="id" property="id" />
+        <result column="org_id" property="orgId" />
+        <result column="org_tag" property="orgTag" />
+        <result column="module_id" property="moduleId" />
+        <result column="module_name" property="moduleName" />
+        <result column="commit_id" property="commitId" />
+        <result column="commit_author" property="commitAuthor" />
+        <result column="commit_comment" property="commitComment" />
+        <result column="commit_lines" property="commitLines" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, org_id, org_tag, module_id, module_name, commit_id, commit_author, commit_comment, commit_lines, is_deleted, create_time
+    </sql>
+
+</mapper>

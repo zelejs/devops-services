@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.kpi.services.domain.dao.QueryCodingProjectDao">
+    <sql id="Base_Column_List">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                kpi_coding_project.id, kpi_coding_project.org_id AS orgId, kpi_coding_project.org_tag AS orgTag, kpi_coding_project.name, kpi_coding_project.client_id AS clientId, kpi_coding_project.desc, kpi_coding_project.is_deleted AS isDeleted, kpi_coding_project.create_time AS createTime
+    </sql>
+
+    <sql id="QueryOwnedOrgIds">
+         SELECT children.id FROM t_sys_org, t_sys_org as children WHERE t_sys_org.left_num &lt;= children.left_num AND
+         t_sys_org.right_num >= children.left_num and t_sys_org.id=#{record.orgId} order by t_sys_org.node_level ASC
+    </sql>
+
+    <select id="queryMasterModel" resultType="CodingProjectModel">
+       SELECT kpi_coding_project.*
+       FROM kpi_coding_project
+       WHERE kpi_coding_project.id=#{id}
+       GROUP BY kpi_coding_project.id
+    </select>
+
+
+    <select id="findCodingProjectPage" resultType="CodingProjectRecord" parameterType="CodingProjectRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+
+        FROM kpi_coding_project
+        <if test="record.orgId > 0">
+            ,(<include refid="QueryOwnedOrgIds"></include>) AS ownedOrgIds
+        </if>
+        WHERE 1=1
+        <if test="record.orgId > 0">
+            AND kpi_coding_project.org_id = ownedOrgIds.id
+        </if>
+        <if test="record.id != null and record.id>0 ">
+            AND kpi_coding_project.id LIKE CONCAT('%',#{record.id},'%')
+        </if>
+
+        <if test="record.orgId != null and record.orgId>0 ">
+            AND kpi_coding_project.org_id IN (<include refid="QueryOwnedOrgIds"/>)
+        </if>
+
+        <if test="record.orgTag != null and record.orgTag!= ''">
+            AND kpi_coding_project.org_tag LIKE CONCAT('%',#{record.orgTag},'%')
+        </if>
+        <if test="record.name != null and record.name!= ''">
+            AND kpi_coding_project.name LIKE CONCAT('%',#{record.name},'%')
+        </if>
+
+        <if test="record.clientId != null and record.clientId>0 ">
+            AND kpi_coding_project.client_id LIKE CONCAT('%',#{record.clientId},'%')
+        </if>
+        <if test="record.desc != null and record.desc!= ''">
+            AND kpi_coding_project.desc LIKE CONCAT('%',#{record.desc},'%')
+        </if>
+
+        <if test="record.isDeleted != null and record.isDeleted>0 ">
+            AND kpi_coding_project.is_deleted LIKE CONCAT('%',#{record.isDeleted},'%')
+        </if>
+
+        <if test="record.createTime != null and record.createTime>0 ">
+            AND kpi_coding_project.create_time LIKE CONCAT('%',#{record.createTime},'%')
+        </if>
+        <if test="startTime != null">
+            <![CDATA[AND kpi_coding_project.start_time >= DATE(#{startTime})]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[AND kpi_coding_project.end_time <= DATE(#{endTime}]]>
+        </if>
+        <!--
+    <if test="search != null and search != ''">
+        OR kpi_coding_project.name LIKE CONCAT('%',#{search},'%')
+    </if>
+    -->
+    </select>
+</mapper>

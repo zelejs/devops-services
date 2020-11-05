@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.issue.services.domain.dao.QueryIssueTaskDao">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <sql id="Base_Column_List">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                cr_issue_task.id, cr_issue_task.org_id AS orgId, cr_issue_task.org_tag AS orgTag, cr_issue_task.pid, cr_issue_task.title, cr_issue_task.ticket, cr_issue_task.name, cr_issue_task.originator, cr_issue_task.originator_user_id AS originatorUserId, cr_issue_task.module_name AS moduleName, cr_issue_task.status, cr_issue_task.type, cr_issue_task.reference_url AS referenceUrl, cr_issue_task.priority, cr_issue_task.follower_user_id AS followerUserId, cr_issue_task.follower, cr_issue_task.remark, cr_issue_task.is_deleted AS isDeleted, cr_issue_task.create_time AS createTime, cr_issue_task.update_time AS updateTime
+    </sql>
+
+        <sql id="QueryOwnedOrgIds">
+         SELECT children.id FROM t_sys_org, t_sys_org as children WHERE t_sys_org.left_num &lt;= children.left_num AND
+         t_sys_org.right_num >= children.left_num and t_sys_org.id=#{record.orgId} order by t_sys_org.node_level ASC
+    </sql>
+    
+    <select id="queryMasterModel" resultType="IssueTaskModel">
+       SELECT cr_issue_task.*
+       FROM cr_issue_task
+       WHERE cr_issue_task.id=#{id}
+       GROUP BY cr_issue_task.id
+    </select>
+
+
+                                                                                    
+    <select id="findIssueTaskPage" resultType="IssueTaskRecord" parameterType="IssueTaskRecord">
+            SELECT <include refid="Base_Column_List"/>
+
+        FROM cr_issue_task
+                <if test="record.orgId > 0">
+            ,(<include refid="QueryOwnedOrgIds"></include>) AS ownedOrgIds
+        </if>
+                WHERE 1=1
+                <if test="record.orgId > 0">
+            AND cr_issue_task.org_id = ownedOrgIds.id
+        </if>
+                                                                            <if test="record.id != null and record.id>0 ">
+                                    AND cr_issue_task.id LIKE CONCAT('%',#{record.id},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.orgId != null and record.orgId>0 ">
+                                    AND cr_issue_task.org_id IN (<include refid="QueryOwnedOrgIds"/>)
+                            </if>
+                                                                    
+                                                                                        <if test="record.orgTag != null and record.orgTag!= ''">
+                                    AND cr_issue_task.org_tag LIKE CONCAT('%',#{record.orgTag},'%')
+                            </if>
+                                                                    <if test="record.pid != null and record.pid>0 ">
+                                    AND cr_issue_task.pid LIKE CONCAT('%',#{record.pid},'%')
+                            </if>
+                                                                    <if test="record.title != null and record.title!= ''">
+                                    AND cr_issue_task.title LIKE CONCAT('%',#{record.title},'%')
+                            </if>
+                                                                    <if test="record.ticket != null and record.ticket!= ''">
+                                    AND cr_issue_task.ticket LIKE CONCAT('%',#{record.ticket},'%')
+                            </if>
+                                                                    <if test="record.name != null and record.name!= ''">
+                                    AND cr_issue_task.name LIKE CONCAT('%',#{record.name},'%')
+                            </if>
+                                                                    <if test="record.originator != null and record.originator!= ''">
+                                    AND cr_issue_task.originator LIKE CONCAT('%',#{record.originator},'%')
+                            </if>
+                                                                    
+                                                                                                        <if test="record.originatorUserId != null and record.originatorUserId>0 ">
+                                    AND cr_issue_task.originator_user_id LIKE CONCAT('%',#{record.originatorUserId},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.moduleName != null and record.moduleName!= ''">
+                                    AND cr_issue_task.module_name LIKE CONCAT('%',#{record.moduleName},'%')
+                            </if>
+                                                                    <if test="record.status != null and record.status>0 ">
+                                    AND cr_issue_task.status LIKE CONCAT('%',#{record.status},'%')
+                            </if>
+                                                                    <if test="record.type != null and record.type>0 ">
+                                    AND cr_issue_task.type LIKE CONCAT('%',#{record.type},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.referenceUrl != null and record.referenceUrl!= ''">
+                                    AND cr_issue_task.reference_url LIKE CONCAT('%',#{record.referenceUrl},'%')
+                            </if>
+                                                                    <if test="record.priority != null and record.priority>0 ">
+                                    AND cr_issue_task.priority LIKE CONCAT('%',#{record.priority},'%')
+                            </if>
+                                                                    
+                                                                                                        <if test="record.followerUserId != null and record.followerUserId>0 ">
+                                    AND cr_issue_task.follower_user_id LIKE CONCAT('%',#{record.followerUserId},'%')
+                            </if>
+                                                                    <if test="record.follower != null and record.follower!= ''">
+                                    AND cr_issue_task.follower LIKE CONCAT('%',#{record.follower},'%')
+                            </if>
+                                                                    <if test="record.remark != null and record.remark!= ''">
+                                    AND cr_issue_task.remark LIKE CONCAT('%',#{record.remark},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.isDeleted != null and record.isDeleted>0 ">
+                                    AND cr_issue_task.is_deleted LIKE CONCAT('%',#{record.isDeleted},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.createTime != null and record.createTime>0 ">
+                                    AND cr_issue_task.create_time LIKE CONCAT('%',#{record.createTime},'%')
+                            </if>
+                                                                    
+                                                                                        <if test="record.updateTime != null and record.updateTime>0 ">
+                                    AND cr_issue_task.update_time LIKE CONCAT('%',#{record.updateTime},'%')
+                            </if>
+                <if test="startTime != null">
+            <![CDATA[AND cr_issue_task.start_time >= DATE(#{startTime})]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[AND cr_issue_task.end_time <= DATE(#{endTime}]]>
+        </if>
+            <!--
+        <if test="search != null and search != ''">
+            OR cr_issue_task.name LIKE CONCAT('%',#{search},'%')
+        </if>
+        -->
+                                    </select>
+</mapper>

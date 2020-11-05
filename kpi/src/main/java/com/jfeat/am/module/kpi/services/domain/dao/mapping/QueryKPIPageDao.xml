@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.kpi.services.domain.dao.QueryKPIPageDao">
+    <sql id="Base_Column_List">
+         kpi_coding_submitter.id, kpi_coding_submitter.org_id AS orgId, kpi_coding_submitter.org_tag AS orgTag, kpi_coding_submitter.commit_author AS commitAuthor, kpi_coding_submitter.commit_email AS commitEmail
+         , kpi_coding_submitter.user_id AS userId, kpi_coding_submitter.create_time AS createTime
+
+    </sql>
+
+    <sql id="QueryOwnedOrgIds">
+         SELECT children.id FROM t_sys_org, t_sys_org as children WHERE t_sys_org.left_num &lt;= children.left_num AND
+         t_sys_org.right_num >= children.left_num and t_sys_org.id=#{record.orgId} order by t_sys_org.node_level ASC
+    </sql>
+
+    <select id="queryMasterModel" resultType="CodingSubmitterModel">
+       SELECT kpi_coding_submitter.*
+       FROM kpi_coding_submitter
+       WHERE kpi_coding_submitter.id=#{id}
+       GROUP BY kpi_coding_submitter.id
+    </select>
+
+
+    <select id="findCodingCommitRecordPage" resultType="CodingCommitRecordRecord" parameterType="CodingCommitRecordRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,kpi_coding_module.project_name as projectName
+
+        FROM kpi_coding_commit_record left join kpi_coding_module
+        on kpi_coding_commit_record.module_id = kpi_coding_module.id
+        <if test="record.orgId > 0">
+            ,(<include refid="QueryOwnedOrgIds"></include>) AS ownedOrgIds
+        </if>
+        WHERE 1=1
+        <if test="record.orgId > 0">
+            AND kpi_coding_commit_record.org_id = ownedOrgIds.id
+        </if>
+        <if test="record.id != null and record.id>0 ">
+            AND kpi_coding_commit_record.id LIKE CONCAT('%',#{record.id},'%')
+        </if>
+
+        <if test="record.orgId != null and record.orgId>0 ">
+            AND kpi_coding_commit_record.org_id IN (<include refid="QueryOwnedOrgIds"/>)
+        </if>
+
+        <if test="record.orgTag != null and record.orgTag!= ''">
+            AND kpi_coding_commit_record.org_tag LIKE CONCAT('%',#{record.orgTag},'%')
+        </if>
+
+        <if test="record.moduleId != null and record.moduleId>0 ">
+            AND kpi_coding_commit_record.module_id LIKE CONCAT('%',#{record.moduleId},'%')
+        </if>
+
+        <if test="record.moduleName != null and record.moduleName!= ''">
+            AND kpi_coding_commit_record.module_name LIKE CONCAT('%',#{record.moduleName},'%')
+        </if>
+
+        <if test="record.commitId != null and record.commitId!= ''">
+            AND kpi_coding_commit_record.commit_id LIKE CONCAT('%',#{record.commitId},'%')
+        </if>
+
+        <if test="record.commitAuthor != null and record.commitAuthor!= ''">
+            AND kpi_coding_commit_record.commit_author LIKE CONCAT('%',#{record.commitAuthor},'%')
+        </if>
+
+        <if test="record.commitComment != null and record.commitComment!= ''">
+            AND kpi_coding_commit_record.commit_comment LIKE CONCAT('%',#{record.commitComment},'%')
+        </if>
+
+        <if test="record.commitLines != null and record.commitLines>0 ">
+            AND kpi_coding_commit_record.commit_lines LIKE CONCAT('%',#{record.commitLines},'%')
+        </if>
+
+        <if test="record.isDeleted != null and record.isDeleted>0 ">
+            AND kpi_coding_commit_record.is_deleted LIKE CONCAT('%',#{record.isDeleted},'%')
+        </if>
+
+        <if test="record.createTime != null and record.createTime>0 ">
+            AND kpi_coding_commit_record.create_time LIKE CONCAT('%',#{record.createTime},'%')
+        </if>
+        <if test="startTime != null">
+            <![CDATA[AND kpi_coding_commit_record.start_time >= DATE(#{startTime})]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[AND kpi_coding_commit_record.end_time <= DATE(#{endTime}]]>
+        </if>
+        <!--
+    <if test="search != null and search != ''">
+        OR kpi_coding_commit_record.name LIKE CONCAT('%',#{search},'%')
+    </if>
+    -->
+    </select>
+
+</mapper>

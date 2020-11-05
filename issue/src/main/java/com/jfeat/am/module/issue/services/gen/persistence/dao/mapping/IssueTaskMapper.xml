@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.issue.services.gen.persistence.dao.IssueTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jfeat.am.module.issue.services.gen.persistence.model.IssueTask">
+        <id column="id" property="id" />
+        <result column="org_id" property="orgId" />
+        <result column="org_tag" property="orgTag" />
+        <result column="pid" property="pid" />
+        <result column="title" property="title" />
+        <result column="ticket" property="ticket" />
+        <result column="name" property="name" />
+        <result column="originator" property="originator" />
+        <result column="originator_user_id" property="originatorUserId" />
+        <result column="module_name" property="moduleName" />
+        <result column="status" property="status" />
+        <result column="type" property="type" />
+        <result column="reference_url" property="referenceUrl" />
+        <result column="priority" property="priority" />
+        <result column="follower_user_id" property="followerUserId" />
+        <result column="follower" property="follower" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, org_id, org_tag, pid, title, ticket, name, originator, originator_user_id, module_name, status, type, reference_url, priority, follower_user_id, follower, remark, is_deleted, create_time, update_time
+    </sql>
+
+</mapper>
