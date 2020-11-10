@@ -1,0 +1,16 @@
+{
+  "name": "crudless",
+  "version": "0.0.0",
+  "description": "",
+  "preferGlobal": true,
+  "bin": {
+    "crudless": "./bin/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^7.0.1",
+    "shelljs": "^0.8.4",
+    "yaml": "^1.10.0"
+  }
+}

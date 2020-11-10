@@ -1,0 +1,332 @@
+pages:
+  advertingPlan:
+    api: /api/crud/advertingPlan/advertingPlans
+    path: /advertismanage/advertingPlan
+    title:
+      table: 计划列表
+    layout:
+      table: Content
+      form: TitleContent
+    list:
+      search:
+        fields:
+          - label: 广告内容
+            field: search
+            props:
+              placeholder: 名称/计划单号
+            type: input
+          - label: 申请时间
+            field: applyTime
+            type: range
+        tabs:
+          field: status
+          all: default
+          options:
+            TO_BE_REVIEWED: 待审核
+            REVIEW_APPROVED: 已审核
+            REVIEW_REJECTED: 审核不通过
+            ORDER_PLACED: 已下单
+            ABOLISHED: 已关闭
+      actions:
+        - title: 导出
+          type: export
+          name: advertingPlan
+          scope: top
+        - title: 查看详情
+          type: view
+          outside: true
+          scope: item
+        - title: 编辑
+          type: edit
+          outside: ture
+          expect:
+            field: status
+            value: TO_BE_REVIEWED
+          scope: item
+        - title: 重新提交
+          type: path
+          outside: true
+          path: /advertismanage/advertingPlan/advertingPlan-reReview
+          expect:
+            field: status
+            value: REVIEW_REJECTED
+          scope: item
+        - title: 新增
+          type: add
+          style: primary
+          scope: top
+          expect:
+            permission: advertingplan.new
+        - title: 下单
+          type: request
+          tips: 确定要下单吗？
+          method: post
+          outside: true
+          api: /api/crud/advertingPlan/advertingPlans/(id)/action/confirm
+          scope: item
+          expect:
+            field: status
+            value: REVIEW_APPROVED
+        - title: 关闭
+          type: request
+          tips: 确定要关闭计划吗?
+          method: get
+          outside: true
+          api: /api/crud/advertingPlan/advertingPlans/(id)/action/close
+          scope: item
+          expect:
+            field: status
+            value: REVIEW_REJECTED
+    view:
+      # 目前支持 plain cardList statusLog 这几种 type
+      left:
+        - title: 广告基本信息
+          type: plain
+          fields:
+            - label: 广告名称
+              field: name
+            - label: 投放日期
+              format: "<releaseStartTime> ~ <releaseEndTime>"
+#            - label: 广告类型
+#              field: type
+#              options:
+#                map:
+#                  SCREEN: 银幕
+#                  SCENES: 场景
+            - label: 广告时长
+              format: "<duration>秒"
+            - label: 已选区域
+              field: cities
+            - label: 投放广告位
+              field: timeSlot
+            - label: 投放类型
+              field: releaseType
+              options:
+                map:
+                  BY_FILM: 贴片
+                  BY_ROUNDS: 场次
+            - label: 指定影片
+              field: filmName
+            - label: 影片海报
+              field: cover
+              type: image
+              expect:
+                field: releaseType
+                value: BY_FILM
+        - title: 投放影院信息 # 以带有图片的卡片列表的形式渲染子项
+          type: cardList
+          field: cinemas
+          map:
+            title: "<name>"
+            subTitle: false
+            image: false
+            imageTitle: false
+          format:
+            - "影院地址: <address>"
+            - "所属院线: <lineName>"
+            - "影厅数: <roomNumber>"
+            - "总座位数: <seatNumber>"
+          operation:
+      right:
+        - title: 订单状态
+          type: statusLog
+          api: /api/crud/advertingPlan/advertingPlans/[id]/operateLog
+          operation:
+            - title: 审核
+              type: request
+              options:
+                tips: 确定审核通过订单吗？
+                method: post
+                outside: true
+                API: /api/crud/advertingPlan/advertingPlans/(id)/action/approve
+                button:
+                  type: primary
+              expect:
+                permission: advertingplan.review
+                field: status
+                value: TO_BE_REVIEWED
+            - title: 拒绝
+              type: modal
+              options:
+                modalTitle: 拒绝原因
+                modalWidth: 600
+                outside: true
+                items:
+                  - component: "Form"
+                    config:
+                      layout: "Grid"
+                      API:
+                        createAPI: /api/crud/advertingPlan/advertingPlans/(id)/action/reject
+                      fields:
+                        - label: 原因
+                          field: reason
+                          type: text-area
+                          span: 24
+                          rules:
+                            - type: required
+                button:
+                  type: secondary
+              expect:
+                permission: advertingplan.review
+                field: status
+                value: TO_BE_REVIEWED
+            - title: 下单
+              type: request
+              options:
+                tips: 确定要下单吗？
+                method: post
+                outside: true
+                API: /api/crud/advertingPlan/advertingPlans/(id)/action/confirm
+                button:
+                  type: primary
+              expect:
+                permission: advertingplan.order
+                field: status
+                value: REVIEW_APPROVED
+    form:
+      columns: 1
+    fields:
+      planNumber:
+        label: 计划单号
+        type: input
+        scope:
+          - list
+          - view
+      orderNumber:
+        label: 订单编号
+        type: complex
+        options:
+          fields:
+            - field: orderNumber
+              type: path
+              options:
+                path: "/advertismanage/ordermanage/ordermanage-view"
+                query:
+                  id: orderId
+        scope:
+          - list
+      message:
+        label: 广告基本信息
+        type: plain
+        options:
+          format:
+            - "广告名称: <name>"
+            - "投放日期: <releaseStartTime> ~ <releaseEndTime>"
+            - "广告时长: <duration>秒"
+        scope:
+          - list
+      name:
+        label: 广告名称
+        type: input
+        scope:
+          - edit
+          - new
+      releaseTimes:
+        label: 投放日期
+        type: range
+        options:
+          format: "YYYY-MM-DD"
+          startDate: releaseStartTime
+          endDate: releaseEndTime
+        scope:
+          - new
+          - edit
+      duration:
+        label: 广告时长
+        type: input
+        options:
+          format: "<duration>秒"
+        scope:
+          - edit
+          - new
+      cinemaCity:
+        label: 投放区域
+        type: pcd
+        scope:
+          - list
+          - new
+          - edit
+      timeSlot:
+        label: 投放广告位
+        type: radio
+        options:
+          IN_ONE_MINUTE:
+            label: 一分钟内
+          AFTER_ONE_MINUTE:
+            label: 1-3分钟
+          AFTER_THREE_MINUTES:
+            label: 3分钟后
+        scope:
+          - view
+          - new
+      advertiserName:
+        label: 广告主
+        type: input
+        scope:
+          - list
+      assistantName:
+        label: 销售助理
+        type: input
+        scope:
+          - list
+          - view
+      type:
+        label: 广告类型
+        type: input
+        scope:
+          - new
+      applyTime:
+        label: 申请时间
+        type: date
+        scope:
+          - list
+      status:
+        label: 状态
+        type: select
+        options:
+          TO_BE_REVIEWED:
+            label: 待审核
+            color: "#f15509"
+          REVIEW_REJECTED:
+            label: 审核不通过
+            color: "#FFA500"
+          REVIEW_APPROVED:
+            label: 已审核
+            color: "#17d349"
+          ORDER_PLACED:
+            label: 已下单
+            color: "#00BFFF"
+          ABOLISHED:
+            label: 已关闭
+            color: "#bdbdbd"
+        scope:
+          - list
+          - view
+      orderStatus:
+        label: 订单状态
+        type: select
+        options:
+          EXECUTING:
+            label: 执行中
+            color: "#0000FF"
+          TO_BE_VERIFY:
+            label: 待结案
+            color: "#FF0000"
+          TO_BE_CONFIRM:
+            label: 待确认
+            color: "#00CD00"
+#          REJECTED:
+#            label: 已拒绝
+#            color: "#696969"
+          VERIFIED:
+            label: 已结案
+            color: "#778899"
+          FINISHED:
+            label: 已结算
+            color: "#BEBEBE"
+          ABOLISHED:
+            label: 已作废
+            color: "#D3D3D3"
+        scope:
+          - list
+

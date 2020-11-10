@@ -1,0 +1,25 @@
+pages:
+  advertiserReport:
+    api: /api/adm/stat/meta/advertiserReport
+    path: /datareport/advertiserreport
+    type: report
+    title:
+      table: 广告主统计
+    layout:
+      table: Content
+      form: TitleContent
+    description: " "
+    service_provider: native 
+
+    data:
+      sql: advertiserReport.sql
+      type: "S,S,S,C,C"
+      search: "广告主名字"
+      tips: " "
+
+    list:
+      actions:
+        - title: 导出
+          type: export
+          api: /api/io/excel/export/advertiserReport
+          scope: top

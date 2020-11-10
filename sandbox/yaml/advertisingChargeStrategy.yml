@@ -1,0 +1,152 @@
+pages:
+  advertisingChargeStrategy:
+    api: /api/crud/billingStrategy/billingStrategies
+    path: /advertismanage/advertisingChargeStrategy
+    title:
+      table: 收费策略
+      edit: 编辑
+    layout:
+      table: Content
+      form: TitleContent
+    list:
+      actions:
+        - title: 编辑
+          type: edit
+          outside: true
+          scope: item
+        - title: 添加
+          type: add
+          style: primary
+          scope: top
+        - title: 删除
+          type: delete
+          scope: item
+    form:
+      columns: 1
+    fields:
+      Number:
+        label: 序号
+        type: index
+        scope:
+          - list
+        sql:
+          type: varchar(20)
+          comment: 序号
+      name:
+        label: 策略名称
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入
+        scope:
+          - list
+          - edit
+          - new
+      cityLevel:
+        label: 城市级别
+        type: radio
+        options:
+          TIER_1_CITY:
+            label: A1级城市
+          TIER_2_CITY:
+            label: A2级城市
+          TIER_3_CITY:
+            label: A3级城市
+          TIER_4_CITY:
+            label: A4级城市
+          TIER_5_CITY:
+            label: A5级城市
+        scope:
+          - list
+          - edit
+          - new
+      boxOffice:
+        label: 票房
+        type: radio
+        options:
+          MORE_THAN_FIFTEEN_MILLION:
+            label: ">1500万"
+          MORE_THAN_EIGHT_MILLION:
+            label: 800万-1500万
+          EIGHT_MILLION:
+            label: <=800万
+        scope:
+          - list
+          - new
+          - edit
+      timeSlot:
+        label: 广告时段
+        type: radio
+        options:
+          IN_ONE_MINUTE:
+            label: 映前0-60秒
+          AFTER_ONE_MINUTE:
+            label: 映前1-3分钟
+          AFTER_THREE_MINUTES:
+            label: 映前3分钟后
+        scope:
+          - list
+          - new
+          - edit
+      releaseType:
+        label: 投放类型
+        type: radio
+        valueType: tag
+        options:
+          BY_FILM:
+            label: 贴片
+            color: "#00BFFF"
+          BY_ROUNDS:
+            label: 场次
+            color: "#FF0000"
+        scope:
+          - new
+          - edit
+          - list
+      prices:
+        label: 单价
+        type: complex
+        options:
+          fields:
+            - field: price
+              type: currency
+              options:
+                style:
+                  fontWeight: 900
+            - field: retailPrice
+              type: currency
+              options:
+                symbol: "刊例价: ￥"
+                style:
+                  color: "#888"
+          direction: vertical
+        scope:
+          - list
+      price:
+        label: 单价
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - edit
+      retailPrice:
+        label: 刊例价
+        type: input
+        props:
+          placeholder: 请输入
+        scope:
+          - edit
+          - new
+      note:
+        label: 备注
+        type: text-area
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - list
+          - edit

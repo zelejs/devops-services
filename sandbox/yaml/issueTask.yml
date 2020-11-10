@@ -1,0 +1,280 @@
+pages:
+  issueTask:
+    api: /api/crud/issueTask/issueTasks
+    title:
+      table: 问题详情
+      new: 新增
+      view: 问题详情
+      edit: 编辑
+    layout:
+      table: Content
+      form: TitleContent
+    cg: #自动代码配置
+      master: t_issueTrack
+      master-id: issueTrack_id
+      slaves:
+        - t_issueTrack_item
+        - t_issueTrack_attachments
+    list:
+      search:
+        fields:
+          - label: 问题内容
+            field: search
+            type: input
+            props:
+              placeholder: 请输入标题/编号
+      actions:
+        - scope: top
+          title: 添加
+          style: primary
+          type: add
+          outside: true
+        - title: 详情
+          type: view
+          outside: true
+          scope: item
+        - title: 编辑
+          type: edit
+          outside: true
+          scope: item
+        - title: 删除
+          type: delete
+          scope: item
+    view:
+      left:
+        - title: 问题详情
+          type: plain
+          fields:
+            - label: 编号
+              field: ticket
+            - label: 标题
+              field: title
+            - label: 缺陷名称
+              field: name
+            - label: 发起人
+              field: originator
+            - label: 跟进人
+              field: follower
+            - label: 所属模块
+              field: module_name
+            - label: 优先级
+              field: priority
+            - label: 问题详情
+              field: reference_url
+            - label: 问题类型
+              field: type
+            - label: 备注
+              field: remark
+    form:
+      column: 1
+    fields:
+      ticket:
+        label: 编号
+        type: input
+        scope:
+          - list
+        sql:
+          comment: 编号(任务或问题)
+          type: varchar(100)
+      title:
+        label: 标题
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 标题
+          type: varchar(200)
+      name:
+        label: 缺陷名称
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 缺陷名称
+          type: varchar(100)
+      originator:
+        label: 发起人
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 问题发起人
+          type: varchar(50)
+      follower:
+        label: 跟进人
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 跟进人名称
+          type: varchar(100)
+      module_name:
+        label: 所属模块
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 所属模块
+          type: varchar(50)
+      priority:
+        label: 优先级
+        type: select
+        options:
+          1:
+            label: 最高
+          2:
+            label: 较高
+          3:
+            label: 高
+          4:
+            label: 一般
+          5:
+            label: 低
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 问题优先级 1-最高优化先  5-最低优先级
+          type: smallint
+      reference_url:
+        label: 问题详情
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入正确的网址
+            type: url
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 问题详情引用 (通过第三方平台进行管理具体问题详情)
+          type: varchar(512)
+      type:
+        label: 问题类型
+        type: input
+        options:
+          10:
+            label: 前端问题
+          11:
+            label: 后端问题
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - view
+          - new
+          - edit
+        sql:
+          comment: 0-问题类型, ..., 10-前端问题,11 -> 后端问题 ...
+          type: smallint
+      create_time:
+        label: 创建时间
+        type: date
+        scope:
+          - list
+        sql:
+          comment: 缺陷信息创建时间
+          default: CURRENT_TIMESTAMP
+          type: datetime
+      status:
+        label: 状态
+        type: select
+        options:
+          Undefined:
+            label: 无状态
+            color: "#FDF5E6"
+          Open:
+            label: 打开
+            color: "#0000FF"
+          Fixed:
+            label: 已修复
+            color: "#B0C4DE"
+          Verifed:
+            label: 已验证
+            color: "#FF8247"
+          Closed:
+            label: 已关闭
+            color: "#C1CDC1"
+          Duplicated:
+            label: 重复问题
+            color: "#8B8B83"
+          NFP:
+            label: 无计划修改
+            color: "#00FF00"
+          Failure:
+            label: 验证失败
+            color: "#FF0000"
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - view
+          - new
+          - edit
+        sql:
+          comment: Undefined-无状态, Open-打开,Fixed-已修得,Verifed-已验证,Closed-已关闭,Duplicated-重复问题,NFP-无计划修改,Failure-验证失败
+          type: smallint
+      remark:
+        label: 备注
+        type: text-area
+        props:
+          placeholder: 请输入
+        scope:
+          - list
+          - view
+          - new
+          - edit
+        sql:
+          comment: 备注
+          type: varchar(512)
+
+
