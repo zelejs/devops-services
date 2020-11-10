@@ -1,0 +1,19 @@
+---
+flyway:
+  baseline-on-migrate: true
+spring:
+  profiles: produce
+  datasource:
+    url: jdbc:mysql://cinema-mysql:3306/cinema?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    filters: log4j,mergeStat
+    sql-script-encoding: UTF-8
+    schema: classpath*:sql/*-schema.sql
+    data: classpath*:sql/*-data.sql
+    initialize: false
+
+logging:
+  level: debug
+  config: config/logback-spring.xml
+
