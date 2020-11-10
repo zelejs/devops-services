@@ -1,0 +1,123 @@
+pages:
+  materialmanage:
+    api: /api/crud/advertingMaterial/advertingMaterials
+    path: /advertismanage/materialmanage
+    title:
+      table: 素材管理
+      new: 添加素材
+      edit: 编辑地址
+    layout:
+      table: Content
+      form: TitleContent
+    list:
+      search:
+        fields:
+          - label: 素材内容
+            field: search
+            props:
+              placeholder: 请输入名称/地址
+            type: input
+      actions:
+        - title: 新增
+          style: primary
+          type: modal
+          modalTitle: 新增素材
+          modalWidth: 760
+          scope: top
+#        - title: 下载地址
+#          type: modal
+#          modalTitle: "添加下载地址"
+#          modalWidth: 760
+#          modal:
+#            fields:
+#              - label: 下载地址
+#                field: assistantResourceUrl
+#                type: input
+#              - label: 备注
+#                type: input
+#            api:
+#              updateAPI: /api/crud/advertingMaterial/advertingMaterials/{id}/action/business/uploadResource
+#          expect:
+#            permission: "advertingmaterialsw.edit"
+#          outside: true
+#          scope: item
+        - title: 编辑
+          type: modal
+          expect:
+            permission: "advertingmaterial.edit"
+          modalTitle: 编辑地址
+          modalWidth: 760
+          outside: true
+          scope: item
+        - title: 删除
+          type: delete
+          outside: false
+          scope: item
+    form:
+      columns: 1
+    fields:
+      name:
+        label: 素材名称
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入
+        scope:
+          - list
+          - new
+          - edit
+      advertiserResourceUrls:
+        label: 素材来源
+        type: plain
+        options:
+          format:
+            - "<advertiserResourceUrl>"
+            - "密码: <advertiserResourcePassword>"
+        scope:
+          - list
+      advertiserResourceUrl:
+        label: 网盘地址
+        rules:
+          - type: url
+            message: 请输入正确的网盘地址
+        props:
+          placeholder: 请输入
+        type: input
+        scope:
+          - new
+          - edit
+      advertiserResourcePassword:
+        label: 密码
+        type: input
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - edit
+      anotherResourceUrl:
+        label: 其他方式
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - type: url
+        scope:
+          - edit
+          - list
+          - new
+      assistantResourceUrl:
+        label: 下载地址
+        type: input
+        valueType: download
+        options:
+          fileName: assistantResourceUrl
+        rules:
+          - type: url
+        scope:
+          - list
+      note:
+        label: 备注
+        type: text-area
+        scope:
+          - list

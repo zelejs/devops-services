@@ -1,0 +1,30 @@
+version: '3'
+services:
+  issue:
+    image: node:latest
+    container_name: issue
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./issue:/issue
+      # YAML本地路径映射
+      - ./yaml:/var/yaml
+      # swagger文件本地路径映射
+      - ./swagger:/var/swagger/
+      # crudless工具本地路径映射
+      - ./crudless:/var/crudless
+      - ./entrypoint.sh:/usr/local/entrypoint.sh
+    environment:
+      MYSQL_DB: cinema
+      MYSQL_HOST: 192.168.3.236
+      MYSQL_PORT: 3307
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    # ports: 
+      # - "8080:8080"
+    entrypoint: ["bash", "/usr/local/bin/entrypoint.sh"]
+
+# networks:
+#   default:
+#     external:
+#       name: sandbox_cinema_default

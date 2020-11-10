@@ -1,0 +1,473 @@
+version: "1.0"
+## 参考 docker-compose.yaml 的编排方式，对自动化生成应用进行编排
+
+meta:
+  author: 作者
+  createTime: 创建时间
+  updateTime: 更新时间
+
+  # pom: # pom 信息
+  #     version: 1.0.0 #版本号
+  #     artifact: crudless
+  # service_meta: # 服务装配信息
+  #     service_name: tickets # 独立服务组别名称
+  #     service_tag: 2341512341234 # 服务索引
+  #     service_title: 问题管理 # 标题
+  #     service_category: OA # 分类信息
+  #     target_domain: dev.cloud.smallsaas.cn #装配目地址
+  #  api:
+  #     create_time: 创建时间 #
+  #     build_time: 2020-06-11 # 更新时间
+  #     developer: josie # 服务开发者名称
+  #     jar_repo_url: http://jar.smallsaas.cn/repositories/issue-1.0.0.jar #jar包地址
+  #     jar_dependencies_url: http://jar.smallsaas.cn/dependencies/tree/issue_dependencies.json
+  #  js:
+  #     create_time: 2020-08-01 # 创建时间
+  #     build_time: 2020-06-11 # 更新时间
+  #     developer: ling #前端开发者名称
+  #     js_page_url: http://jar.smallsaas.cn/repository/issue #前端面页
+
+data:
+  field-config:
+    - name: shedule_config
+      value: 排期配置
+      description: 描述信息
+    - name: sms_config
+      value: 短信通知配置
+    - name: defaultImage
+      group: shedule_config # 该配置属于某个组下, 必须要先在前面定义了对应的 group
+      title: 基础图片
+      description: 默认图片配置
+      value: https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1600766787&di=dc12b1588ebe5757206bc55122223ef7&src=http://a0.att.hudong.com/56/12/01300000164151121576126282411.jpg
+    - name: CREATED_PLAN_SMS_NOTIFY
+      group: sms_config
+      description: 广告主生成订单通知给店小二
+      value: SMS_203677187
+    - name: CREATED_ORDER_SMS_NOTIFY
+      group: sms_config
+      description: 订单审核通过发给商务
+      value: SMS_203677196
+    - name: DISTRIBUTED_ORDER_SMS_NOTIFY
+      group: sms_config
+      description: 订单生成后送给影院执行人
+      value: SMS_203677243
+    - name: REMIND_ORDER_SMS_NOTIFY
+      group: sms_config
+      description: 倒计时前一天通知影院执行人
+      value: SMS_203677248
+    - name: PUBLISHED_ORDER_SMS_NOTIFY
+      group: sms_config
+      description: 执行后提醒影城上传结案报告
+      value: SMS_203677255
+
+auth:
+  ## wechat, github, account
+  sso: github
+  ## 是否可注册, allow,none
+  reg: none
+  ## 底图可配置,也可以纯色
+  bg: url
+
+ui:
+  ##  风格: 白天,黑夜,蓝天,草原,彩霞,浪漫
+  theme: Light
+  ## 应用布局 (菜单） top, left
+  layout: top
+
+theme:
+  primary-color: "#610b0b"
+  primary-color-light: "#860909"
+  primary-color-bgColor: "#fcd0d0"
+  menu-ico: "#81cfff"
+  menu-top-bgColor: "#0b4f79" # 导航条底色
+  menu-top-active-bgColor: "#2489c7" # 已选中的导航颜色
+  menu-top-bgColor-light: "#2489c7" # 鼠标悬停颜色
+  menu-top-fontColor: "#fff"
+  menu-top-fontSize: "16px"
+  menu-left-bgColor: "white"
+  menu-left-active-bgColor: "#2489c7"
+  menu-left-fontColor: "#0b4f79"
+  menu-left-fontSize: "16px"
+  menu-left-active-fontColor: "#fff"
+
+entries:
+  - dev_name: product_mgr # 用于装配服务时定位菜单入口
+    label: 产品管理
+    path: /products
+    icon: static/product_entry.png # 服务组可配置图标
+    permissions: "products.view"
+    #app_id: demo  # 用于授权 (暂时忽略)
+    #app_secret: AJOI7800AFJEO7AOFE   # 用于授权 (暂时忽略)
+    sub_entries:
+      - dev_name: product_type
+        path: /products/types
+        label: 产品分类
+        permissions: "productType.view"
+        #app_id: demo  # 用于授权 (暂时忽略)
+        #app_secret: AJOI7800AFJEO7AOFE   # 用于授权 (暂时忽略)
+      - dev_name: product_tag
+        label: 产品标签
+        path: /products/tags
+        permissions: "productTag.view"
+      - dev_name: product
+        label: 产品
+        path: /products/product
+        permissions: "product.view"
+  - dev_name: orders
+    label: 单订管理
+    icon: static/orders_entry.png
+    permissions: "orders.view"
+  - dev_name: ticket_mgr
+    label: 工单管理
+    icon: static/ticket_entry.png
+    path: /issues # 需要匹配pages/下面的路径，用于面包屑显示
+    permissions: "ticket.view"
+    sub_entries:
+      - dev_name: ticket_issues
+        label: 问题管理
+        path: /issues/issue # 需要匹配pages/下面的路径
+        permissions: "issue.view"
+  - dev_name: agent_report
+    label: 股东毛利净利报表
+    path: /agent/agentReport
+    permissions: "agentReport.view"
+
+pages:
+  issue: # 与匹配pages/ 下面的终端路径一致，即 pages/issues/issue
+    api: /api/crud/issues/issue
+    path: /issues/issue
+    title:
+      table: 页面名称
+      new: 新增数据
+      edit: 编辑数据
+    layout:
+      table: Content ## 默认 action 位于 title 下方
+      form: TitleContent ## 默认 action 位于 title 右边
+    description: "API for Issues"
+    service_provider: native # 默认native-通过配置sql定义生成, external-拼接外部服务
+    
+    ## 开发阶段自定义界面配置 NamedCart
+    dev:
+      component: 
+        name: DevPad
+        alignment: top  # [top, bottom, left, right]
+        width: auto # [200em]
+
+    features: # 实体能力(capability)
+      - saas # 具备 saas 能力，默认增加字段 org_id, org_tag
+      - tag # 具备 tag 功能
+      - image # 具备 image snapshot 功能
+      - eav # 自定义字段
+      - category # 一般分组，通过 crud-category
+      #- group    #独立表进行分组, 与category只能选其一
+
+    cg: #自动代码配置
+      master: t_issue
+      master-id: issue_id;issue_id
+      slaves:
+        - t_issue_item
+        - t_issue_attachments
+
+    list:
+      search: # 搜索条件
+        fields:
+          - label: 搜索
+            field: search
+            type: input
+            props:
+              placeholder: 请输入姓名/电话
+        tabs: # 展开分类
+          field: status
+          all: default # default 默认包括全部选项, none 代表没有全部选项
+          options:
+            Open: 打开
+            Draft: 草稿
+      actions:
+        ### TOP ACTIONS
+        - title: 新建
+          type: add # add 本质是带有初始值的 path
+          style: default # 设置按钮的颜色风格 primary secondary, 默认 default
+          scope: top
+        - title: 新建
+          type: modal # 在弹出的模态框中完成新建, 一般用于字段数量较少的场景
+          modalTitle: 新建数据 # 模态框的标题
+          modalWidth: 760 # 模态框的宽度
+          scope: top
+        - title: 导出
+          type: export
+          api: /api/io/excel/teamReward
+          data:
+            sql: SELECT '申请' as '名称',(CASE Open WHEN 'Open' THEN '打开' WHEN '2' THEN '提交' END) as '状态' FROM (select 'Open') t
+          scope: top
+        - title: 导入
+          type: import
+          name: importScopeName
+          scope: top
+        - title: 打印
+          type: print #打印
+          #api: /api/io/undefined
+          scope: top
+        ### ITEM ACTIONS
+        - title: 编辑
+          type: edit # edit 本质是带有初始值的 path
+          outside: true # 操作入口显示在外面
+          scope: item # 默认为列表项操作
+          expect:
+            permission: advertingplan.edit ##permission后面的字段是权限id后台提供，结合系统管理的权限控制
+        - title: 编辑
+          type: modal # 在弹出的模态框中完成编辑, 一般用于字段数量较少的场景
+          modalTitle: 编辑数据 # 模态框的标题
+          modalWidth: 760 # 模态框的宽度
+          modal:
+            fields: # 默认会自动填入对应的编辑字段, 也可以这样手动覆盖
+              - label: 名称
+                type: input
+                field: name
+            api: # 默认会自动填入对应的 CRUD api, 也可以这样手动覆盖
+              getAPI: /api/crud/(id)/action
+              updateAPI: /api/crud/(id)/action
+        - title: 详情
+          type: view # view 本质是带有初始值的 path
+        - title: 删除
+          type: delete
+          tips: 确定要删除吗? # scope 为 item 时有效
+          outside: false # 默认为 隐藏入口
+          #scope: item   # 没有定义默认为列表项操作
+        ## ACTIONS
+        - title: 审核通过 ## 通地实体自定义action api
+          type: action # 自定义 ACTION
+          api: /api/crud/issue/issues/{id}/action/approve
+          #action: approve # 同 /api/crud/issue/issues/{id}/action/approve
+          #plugin: approve #与 action 二选一: 同 /api/plugin/actions/approve/issue/{id}, 即 /api/plugin/actions/{action}/{entity}/{id},
+          scope: item
+          expect: # 操作有效的条件状态
+            field: status
+            value: SUBMITTED
+            permission: ordertask.edit ##操作按钮的有效条件
+        - title: 审核通过 ## 简写, 功能同上
+          type: action # 自定义 ACTION
+          #api: /api/crud/issue/issues/{id}/action/approve
+          action: approve # 同 api: /api/crud/issue/issues/{id}/action/approve
+          #plugin: approve # action 二选一: 同 /api/plugin/actions/approve/issue/{id}, 即 /api/plugin/actions/{action}/{entity}/{id},
+          scope: item
+        - title: 拒绝
+          type: action
+          #api: /api/meta/entity/{entity}/entities/{id}/action/cancel
+          meta: cancel # meta 状态跳转, 跳转名称包含 pass, reject, cancel, 同 api: /api/meta/entity/{entity}/entities/{id}/action/cancel
+          scope: item
+        ### VIEW ACTION  # 实体详情操作
+        - title: 审核通过
+          type: action
+          action: approve # 同 api: /api/crud/issue/issues/{id}/action/approve
+          scope: view # 实体详情内操作
+        ### BATCH ACTIONS
+        - title: 审批
+          scope: batch # 批量操作
+        - title: 拒绝
+          scope: batch # 批量操作
+        - title: 提交
+          type: meta # meta 元操作
+          scope: batch # 批量操作
+
+    form:
+      columns: 1 # 表单将按照两列的形式排版显示
+
+    view:
+      # 目前支持 plain cardList statusLog 这几种 type
+      left:
+        - title: 详情页面
+          type: plain
+          fields:
+            - label: 名称
+              field: name
+        - title: 子项标题 # 以带有图片的卡片列表的形式渲染子项
+          type: cardList
+          api: # 从该 api 获取子项数据
+          map:
+            title: "<title> 所属人: <name>"
+            subTitle: ""
+            image: "<cover>"
+            imageTitle: ""
+          format:
+            - "联系方式: <phone>/<email>"
+            - "简介: <note>"
+          operation:
+            - title: 跳转页面
+              type: path
+              options:
+                outside: true
+                path: /page/myPage
+      right:
+        - title: 联系方式
+          type: plain
+          fields:
+            - label: 手机
+              field: phone
+            - label: 邮箱
+              field: email
+            - label: 微信
+              field: weChat
+        - title: 订单状态
+          type: statusLog
+          api: /api/getLogs/[id] # 这里的动态参数 id 应该使用 方括号
+
+    fields:
+      ## name 字段
+      name:
+        label: 名称
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - type: required
+            message: 请输入名称
+        scope:
+          - list
+          - new
+          - edit
+        # 数据字段属性
+        sql:
+          type: varchar(100)
+          notnull: true
+          comment: 名称
+          unique: true
+
+      # 在列表里复合显示一个字段(纯文本)
+      contact:
+        label: 联系信息
+        type: plain
+        options:
+          format:
+            - "姓名: <name>"
+            - "电话: <phone>"
+        scope:
+          - list
+
+      # 在列表里复合显示一个字段
+      # 这里演示了同时在一个表格单元显示 图片与金额
+      demo:
+        label: 复合字段
+        type: complex
+        options:
+          fields:
+            - field: cover
+              type: image
+            - field: money
+              type: currency
+          direction: horizontal # 默认水平布局, 设置为 vertical 则垂直布局
+        scope:
+          - list
+
+      #sex  单选字段
+      sex:
+        label: 性别
+        type: radio
+        options:
+          0: 男
+          1: 女
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          type: varchar(1)
+          comment: "性别"
+
+      ## phone 手机号,
+      phone:
+        label: 手机号
+        type: input
+        rules: # "phone" 为验证手机格式
+          - type: required
+            message: 请输入手机号
+          - type: phone
+            message: 手机号码格式不正确
+          #-
+          #  type: email
+          #  message: 邮箱地址格式不正确
+        scope:
+          - list
+          - new
+          - edit
+        # 数据字段属性
+        sql:
+          type: varchar(100)
+          comment: "手机号"
+
+      # status 选项字段
+      status:
+        label: 状态
+        type: select
+        options:
+          OPEN:
+            label: 开放
+            color: "#1890ff"
+          DRAFT:
+            label: 草稿
+            color: "#1890ff"
+        scope: #  不能直接编辑状态
+          - list
+          - new
+        sql:
+          type: varchar(25)
+          notnull: true
+          comment: "状态"
+          default: OPEN
+
+      image:
+        label: 图片
+        type: image
+        scope:
+          - all
+
+      # creatTime 日期字段
+      createTime:
+        label: 创建时间
+        type: date
+        scope:
+          - list
+        sql:
+          type: datetime
+          notnull: true
+          comment: "创建时间"
+          default: CURRENT_TIMESTAMP
+
+      # descriptions 文本字段
+      descriptions:
+        label: 备注
+        type: text-area
+        props:
+          autoSize:
+            minRows: 4 #设置文本框高度
+          placeholder: 请输入……
+        scope:
+          - all
+        sql:
+          type: varchar(255)
+          comment: "备注"
+
+  ## 报表页
+  agentReport:
+    api: /api/adm/stat/meta/agentReport
+    path: /reports/agentReport
+    type: report
+    title:
+      table: 股东毛利净利报表
+    description: "Agent Statistic Data Report"
+    service_provider: native # 默认native-通过配置sql定义生成, external-拼接外部服务
+
+    ## 数据包括查询语句，以及数据类型，查询条件
+    data:
+      sql: agentReport.sql
+      type: "S,S,S,C,C"
+      search: "广告主名字"
+      tips:
+
+    list:
+      actions:
+        - title: 导出
+          type: export
+          api: /api/io/excel/export/agentReport
+          scope: top
+          expect:
+            permission: agentReport.export

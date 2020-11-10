@@ -1,0 +1,325 @@
+pages:
+  advertiser:
+    api: /api/crud/advertiser/advertisers
+    path: /advertismanage/advertiser
+    title:
+      table: 广告主列表
+      view: 广告主详情
+      new: 新增
+    layout:
+      table: Content
+      form: TitleContent
+    list:
+      search:
+        fields:
+          - label: 广告主
+            field: search
+            props:
+              placeholder: 广告主/联系人/电话
+            type: input
+      actions:
+        - title: 添加
+          type: add
+          style: primary
+          scope: top
+        - title: 导出
+          type: export
+          name: advertiser
+          scope: top
+        - title: 编辑
+          type: edit
+          scope: item
+        - title: 查看
+          type: view
+          outside: true
+          scope: item
+        - title: 禁用
+          type: request
+          tips: 确定禁用广告主吗？
+          outside: false
+          api: /api/crud/advertiser/advertisers/(id)
+          method: delete
+          scope: item
+          expect:
+            field: status
+            value: PASS
+        - title: 启用
+          type: request
+          tips: 确定启用广告主吗？
+          outside: false
+          api: /api/crud/advertiser/advertisers/(id)
+          method: delete
+          scope: item
+          expect:
+            field: status
+            value: STOP
+        - title: 通过
+          type: request
+          tips: 确定通过广告主吗？
+          outside: true
+          api: /api/crud/advertiser/advertisers/pass/(id)/PASS
+          method: put
+          scope: item
+          expect:
+            field:
+              - status
+              - assistantName
+            value:
+              - PENDING_APPROVAL
+              - IS_NOT_NULL
+        - title: 不通过
+          modalTitle: 拒绝原因
+          modalWidth: 550
+          outside: true
+          type: modal
+          modal:
+            component: "Form"
+            fields:
+              - label: 拒绝原因
+                type: text-area
+                span: 24
+                field: note
+                rules:
+                  - type: required
+            api:
+              updateAPI: /api/crud/advertiser/advertisers/pass/(id)/REFUSE
+#          method: put
+          scope: item
+          expect:
+            field:
+              - status
+              - assistantName
+            value:
+              - PENDING_APPROVAL
+              - IS_NOT_NULL
+        - title: 分配店小二
+          type: modal
+          scope: item
+          modalTtile: 分配店小二
+          modalWidth: 640
+          outside: false
+          layout: Empty
+          modal:
+            items:
+              - layout: Empty
+                component: Form
+                config:
+                  layout: Grid
+                  layoutConfig:
+                    value:
+                      - 12
+                        12
+            api:
+              updateAPI: /api/crud/advertiser/advertisers/setAssistant/(id)
+            fields:
+              - label: 选择店小二
+                field: assistantId
+                type: modal-radio
+                rules:
+                  - required
+                options:
+                  title: 选择店小二
+                  value: id
+                  API: /api/crud/cinema/user?roleCode=104
+                  label: name
+                  editLabel: assistantName
+                  pagination: true
+                  fields:
+                    - label: 店小二
+                      field: name
+          expect:
+            field: status
+            value: PENDING_APPROVAL
+            permission: advertiser.setAssistant
+        - title: 创建计划
+          type: path  #页面跳转需要配置为path
+          outside: true
+          path: /advertismanage/advertingPlan/advertingPlan-help #需要跳转到的页面路径
+          query:
+            advertiserId: id #advertiserId为传递到跳转页面的id
+          scope: item
+          expect:
+            field:
+              status
+            value:
+              -
+                - PASS
+                - STOP
+    form:
+      columns: 1
+    view:
+      left:
+        - title: 广告主详情
+          type: plain
+          fields:
+            - label: 账号
+              field: contactPhone
+            - label: 名称
+              field: companyName
+            - label: 广告主
+              field: contactName
+            - label: 地址
+              field: address
+              type: plain
+              format:
+                - "<province><city><district>"
+            - label: 店小二
+              field: assistantName
+            - label: 所在行业
+              field: industry
+              type: plain
+              format:
+                - "<xIndustry>/<lIndustry>/<mIndustry>"
+            - label: 备注
+              field: note
+            - label: 营业执照
+              field: businessLicenseProve
+              type: image
+        - title: 广告计划信息
+          type: cardList
+          api: /api/crud/advertingPlan/advertingPlans?advertiserId=[id]
+          map:
+            title: "计划单号:<planNumber>"
+            subTitle: false
+            image: false
+            imageTitle: false
+          format:
+            - "广告名称: <name>"
+            - "投放日期: <releaseStartTime> ~ <releaseEndTime>"
+            - "广告时长: <duration>秒"
+            - "投放区域: <cinemaCity>"
+            - "销售助理: <assistantName>"
+      right:
+        - title: 审核状态
+          type: statusLog
+          api: /api/crud/advertiser/advertisers/operateLog/[id]
+    fields:
+      contactPhone:
+        label: 账号
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入手机号
+        scope:
+          - list
+          - new
+      password:
+        label: 密码
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+      companyName:
+        label: 公司名称
+        type: input
+        rules:
+          - type: required
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - edit
+#      orgCode:
+#        label: 组织编号
+#        type: input
+#        scope:
+#          - new
+      contactName:
+        label: 联系人
+        type: input
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - edit
+      address:
+        label: 所在地区
+        type: pcd
+        scope:
+          - new
+          - edit
+      industry:
+        label: 所在行业
+        type: pcd
+        options:
+          API: /api/crud/industry/query
+          map:
+            - type: X
+              value: xIndustry
+            - type: L
+              value: lIndustry
+            - type: M
+              value: mIndustry
+        scope:
+          - new
+          - edit
+      advertiserMessage:
+        label: 广告主信息
+        type: plain
+        options:
+          format:
+            - "<companyName>"
+            - "<contactName>"
+            - "<province><city><district>"
+        scope:
+          - list
+      assistantName:
+        label: 店小二
+        type: input
+        scope:
+          - list
+      comeFrom:
+        label: 来源
+        type: radio
+        align: center
+        valueType: dot
+        options:
+          0:
+            label: 系统创建
+            color: "#0099CC"
+          1:
+            label: 用户注册
+            color: "#00CC99"
+        scope:
+          - list
+      status:
+        label: 状态
+        type: select
+        options:
+          PASS:
+            label: 使用中
+            color: "#123456"
+          STOP:
+            label: 停用
+            color: "#778899"
+          PENDING_APPROVAL:
+            label: 待审核
+            color: "#d8330e"
+          REFUSE:
+            label: 已拒绝
+            color: "#bdbdbd"
+        scope:
+          - list
+#      loginTime:
+#        label: 最近登录时间
+#        type: date
+#        scope:
+#          - list
+      countHistoryOrder:
+        label: 历史广告订单
+        type: input
+        align: right
+        scope:
+          - list
+      note:
+        label: 备注
+        type: text-area
+        props:
+          placeholder: 请输入
+        scope:
+          - new
+          - edit

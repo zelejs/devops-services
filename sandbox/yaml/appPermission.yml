@@ -1,0 +1,160 @@
+pages:
+  appPermission:
+    api: /api/crud/appPermission/appPermissions
+    path: /devops/appPermission
+    title:
+      table: 配置列表
+      new: 添加
+      edit: 编辑
+      view: 配置详情
+    layout:
+      table: Content
+      form: TitleContent
+    list:
+      search:
+        fields:
+          - field: search
+            label: 配置内容
+            props:
+              placeholder: 请输入
+            type: input
+      actions:
+        - title: 添加
+          type: add
+          scope: top
+          style: primary
+        - title: 查看详情
+          type: view
+          scope: item
+          outside: true
+        - title: 编辑
+          type: edit
+          scope: item
+          outside: true
+        - title: 删除
+          type: delete
+          scope: item
+    view:
+      left:
+        - title: 配置详情
+          type: plain
+          fields:
+            - label: 微服务名
+              field: service_name
+            - label: appid
+              field: 项目id
+            - label: 权限
+              field: permission
+            - label: 接口id
+              field: apiid
+            - label: 请求路径
+              field: api_url
+            - label: 请求方式
+              field: api_method
+    form:
+      column: 1
+    fields:
+      service_name:
+        label: 微服务名
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 微服务名
+          notnull: true
+          type: varchar(80)
+      appid:
+        label: 项目id
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 项目id
+          notnull: true
+          type: varchar(80)
+      permission:
+        label: 权限
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 权限
+          notnull: true
+          type: varchar(50)
+      apiid:
+        label: 接口id
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 接口id
+          type: varchar(80)
+      api_url:
+        label: 请求路径
+        type: input
+        props:
+          placeholder: 请输入
+        rules:
+          - message: 请输入
+            type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: 请求路径
+          notnull: true
+          type: varchar(255)
+      api_method:
+        label: 请求方式
+        type: select
+        options:
+          GET:
+            label: GET
+          POST:
+            label: POST
+          DELETE:
+            label: DELETE
+          PUT:
+            label: PUT
+        props:
+          placeholder: 请输入
+        rules:
+          - type: required
+        scope:
+          - list
+          - new
+          - edit
+        sql:
+          comment: GET POST, DELETE PUT 请求方式
+          notnull: true
+          type: varchar(8)
+
