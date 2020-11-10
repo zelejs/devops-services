@@ -34,7 +34,7 @@ import com.jfeat.am.module.issue.services.domain.service.*;
 import com.jfeat.am.module.issue.services.domain.model.IssueTaskRecord;
 import com.jfeat.am.module.issue.services.gen.persistence.model.IssueTask;
 
-        import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController;
         
 import javax.annotation.Resource;
 import java.util.Date;
@@ -50,7 +50,7 @@ import java.util.Date;
 @RestController
 
 @Api("IssueTask")
-@RequestMapping("/api/crud/issueTask/issueTasks")
+@RequestMapping("/api/dev/issueTask/issueTasks")
 public class IssueTaskEndpoint {
 
 @Resource
