@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Code generator
- * @since 2020-10-29
+ * @since 2020-11-10
  */
 @TableName("cr_issue_task")
 public class IssueTask extends Model<IssueTask> {
@@ -35,13 +35,15 @@ public class IssueTask extends Model<IssueTask> {
 
     private String name;
 
+    private String brief;
+
     private String originator;
 
     private Long originatorUserId;
 
     private String moduleName;
 
-    private Integer status;
+    private String status;
 
     private Integer type;
 
@@ -125,6 +127,15 @@ public class IssueTask extends Model<IssueTask> {
           return this;
       }
     
+    public String getBrief() {
+        return brief;
+    }
+
+      public IssueTask setBrief(String brief) {
+          this.brief = brief;
+          return this;
+      }
+    
     public String getOriginator() {
         return originator;
     }
@@ -152,11 +163,11 @@ public class IssueTask extends Model<IssueTask> {
           return this;
       }
     
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-      public IssueTask setStatus(Integer status) {
+      public IssueTask setStatus(String status) {
           this.status = status;
           return this;
       }
@@ -256,6 +267,8 @@ public class IssueTask extends Model<IssueTask> {
 
       public static final String NAME = "name";
 
+      public static final String BRIEF = "brief";
+
       public static final String ORIGINATOR = "originator";
 
       public static final String ORIGINATOR_USER_ID = "originator_user_id";
@@ -297,6 +310,7 @@ public class IssueTask extends Model<IssueTask> {
                   ", title=" + title +
                   ", ticket=" + ticket +
                   ", name=" + name +
+                  ", brief=" + brief +
                   ", originator=" + originator +
                   ", originatorUserId=" + originatorUserId +
                   ", moduleName=" + moduleName +

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author Code generator
- * @since 2020-10-29
+ * @since 2020-11-10
  */
 public interface IssueTaskMapper extends BaseMapper<IssueTask> {
 

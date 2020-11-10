@@ -1,6 +1,6 @@
 package com.jfeat.am.module.issue.api.permission;
 /**
- * Created by Code generator on 2020-10-29
+ * Created by Code generator on 2020-11-10
  */
 public class IssueTaskPermission {
     public static final String ISSUETASK_VIEW = "issuetask.view";

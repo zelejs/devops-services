@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Code generator on 2020-10-29
+ * Created by Code generator on 2020-11-10
  */
 public interface QueryIssueTaskDao extends QueryMasterDao<IssueTask> {
    /*

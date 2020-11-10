@@ -8,8 +8,8 @@ import com.jfeat.am.module.issue.services.gen.persistence.model.IssueTask;
  * </p>
  *
  * @author Code generator
- * @since 2020-10-29
- * Master: ${cfg.masterModel}
+ * @since 2020-11-10
+ * Master: serviceOnly
   * Slave : cr_issue_task
   */
 public interface CRUDIssueTaskService  extends CRUDServiceOnly<IssueTask> {

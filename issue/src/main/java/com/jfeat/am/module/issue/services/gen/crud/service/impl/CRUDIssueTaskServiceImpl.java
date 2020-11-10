@@ -7,7 +7,6 @@ import com.jfeat.crud.plus.FIELD;
 import com.jfeat.am.module.issue.services.gen.persistence.model.IssueTask;
 import com.jfeat.am.module.issue.services.gen.persistence.dao.IssueTaskMapper;
 import com.jfeat.am.module.issue.services.gen.crud.service.CRUDIssueTaskService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
@@ -20,7 +19,7 @@ import com.jfeat.crud.plus.impl.CRUDServiceOnlyImpl;
  * </p>
  *CRUDIssueTaskService
  * @author Code generator
- * @since 2020-10-29
+ * @since 2020-11-10
  */
 
 @Service

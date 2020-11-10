@@ -11,6 +11,7 @@
         <result column="title" property="title" />
         <result column="ticket" property="ticket" />
         <result column="name" property="name" />
+        <result column="brief" property="brief" />
         <result column="originator" property="originator" />
         <result column="originator_user_id" property="originatorUserId" />
         <result column="module_name" property="moduleName" />
@@ -28,7 +29,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, org_id, org_tag, pid, title, ticket, name, originator, originator_user_id, module_name, status, type, reference_url, priority, follower_user_id, follower, remark, is_deleted, create_time, update_time
+        id, org_id, org_tag, pid, title, ticket, name, brief, originator, originator_user_id, module_name, status, type, reference_url, priority, follower_user_id, follower, remark, is_deleted, create_time, update_time
     </sql>
 
 </mapper>
