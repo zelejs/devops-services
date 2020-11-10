@@ -110,6 +110,5 @@ var server = app.listen(8080, function () {
   var host = this.address().address;
   var port = this.address().port;
   host = (host == "::" ? "localhost" : host);
-  console.log(process.env.JAVA_HOME)
   console.log("应用实例，访问地址为 http://%s:%s", host, port);
 });
