@@ -1,6 +1,6 @@
 version: '3'
 services:
-  api:
+  dev-api:
     container_name: dev-api
     image: zelejs/allin-web:jdk11
     volumes:
@@ -11,9 +11,9 @@ services:
       TZ: "Asia/Shanghai"
     privileged: true
 
-  issue:
+  issue-js:
     image: node:latest
-    container_name: issue
+    container_name: issue-js
     privileged: true
     volumes:
       - /etc/localtime:/etc/localtime:ro
