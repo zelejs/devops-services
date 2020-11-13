@@ -7,7 +7,7 @@ var shell = require("shelljs");
 
 module.exports = require("./config.js");
 
-const checkJsonFilePath = "./check.json";
+const checkJsonFilePath = yamlDir + "/check.json";
 const IssueService = require('./service/IssueService');
 const bodyParser = require("body-parser");
 const { exit } = require("process");
@@ -90,7 +90,8 @@ app.get("/api/issue/check", function (req, res) {
   clearCheckJson();
   message = {
     code: 200,
-    message: issueRecords,
+    data: issueRecords,
+    message: "检查完成",
   };
   res.send(message);
 });

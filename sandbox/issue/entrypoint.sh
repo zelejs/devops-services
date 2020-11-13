@@ -6,7 +6,8 @@ npm config set registry http://registry.npm.taobao.org
 # 初始化crudless工具集
 cd /var/crudless
 if [ ! -d node_modules ];then
-    npm i -g
+    npm install
+    npm link
 fi
 
 # 初始化issue服务API
