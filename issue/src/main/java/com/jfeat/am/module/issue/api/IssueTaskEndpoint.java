@@ -51,7 +51,7 @@ import java.util.Date;
 @RestController
 
 @Api("IssueTask")
-@RequestMapping("/api/crud/issueTask/issueTasks")
+@RequestMapping("/api/dev/issueTask/issueTasks")
 public class IssueTaskEndpoint {
 
     @Resource
