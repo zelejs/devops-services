@@ -9,3 +9,5 @@ build/
 *.db
 .DS_Store
 logs/
+venv/
+__pycache__/

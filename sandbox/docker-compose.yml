@@ -35,6 +35,25 @@ services:
       MYSQL_PASSWORD: root
     entrypoint: ["bash", "/usr/local/bin/entrypoint.sh"]
 
+  db-service:
+    image: python:latest
+    container_name: db-service
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./db-service:/db-service
+      # db-service镜像执行脚本（检查处理依赖问题）
+      - ./db-service/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    environment:
+      MYSQL_HOST: 192.168.3.236
+      MYSQL_PORT: 3307
+      MYSQL_DATABASE: cinema
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      SAVE_PATH: /db-service
+      SAVE_NAME: db.xlsx
+    entrypoint: ["bash", "/usr/local/bin/entrypoint.sh"]
+
 networks:
   default:
     external:
