@@ -108,10 +108,11 @@
         <if test="endTime != null">
             <![CDATA[AND cr_issue_task.end_time <= DATE(#{endTime}]]>
         </if>
-            <!--
         <if test="search != null and search != ''">
-            OR cr_issue_task.name LIKE CONCAT('%',#{search},'%')
+            AND cr_issue_task.title LIKE CONCAT('%',#{search},'%')
+            OR cr_issue_task.ticket LIKE CONCAT('%',#{search},'%')
+            OR cr_issue_task.id LIKE CONCAT('%',#{search},'%')
+            OR cr_issue_task.brief LIKE CONCAT('%',#{search},'%')
         </if>
-        -->
                                     </select>
 </mapper>
