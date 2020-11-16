@@ -116,7 +116,7 @@ public class IssueTaskEndpoint {
     @PostMapping("/dels")
     @ApiOperation("批量删除 IssueTask")
     public Tip deleteIssueTasks(@RequestBody Ids ids) {
-        return SuccessTip.create(issueTaskService.bulkDeleteMasterList(ids.getIds()));
+        return SuccessTip.create().setData(issueTaskService.bulkDeleteMasterList(ids.getIds()));
     }
 
     @Permission(IssueTaskPermission.ISSUETASK_VIEW)
