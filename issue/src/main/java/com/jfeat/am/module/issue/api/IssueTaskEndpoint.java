@@ -1,6 +1,8 @@
 package com.jfeat.am.module.issue.api;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jfeat.crud.plus.META;
 import com.jfeat.am.core.jwt.JWTKit;
 
@@ -45,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -106,6 +109,14 @@ public class IssueTaskEndpoint {
     @ApiOperation("删除 IssueTask")
     public Tip deleteIssueTask(@PathVariable Long id) {
         return SuccessTip.create(issueTaskService.deleteMaster(id));
+    }
+
+    @BusinessLog(name = "IssueTask", value = "delete IssueTask")
+    @Permission(IssueTaskPermission.ISSUETASK_DELETE)
+    @PostMapping("/dels")
+    @ApiOperation("批量删除 IssueTask")
+    public Tip deleteIssueTasks(@RequestBody Ids ids) {
+        return SuccessTip.create(issueTaskService.bulkDeleteMasterList(ids.getIds()));
     }
 
     @Permission(IssueTaskPermission.ISSUETASK_VIEW)
